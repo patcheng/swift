@@ -230,8 +230,14 @@ Driver::buildToolChain(const llvm::opt::InputArgList &ArgList) {
     return llvm::make_unique<toolchains::GenericUnix>(*this, target);
     break;
   default:
-    Diags.diagnose(SourceLoc(), diag::error_unknown_target,
-                   ArgList.getLastArg(options::OPT_target)->getValue());
+    switch(target.getArch()) {
+      case llvm::Triple::wasm32:
+      case llvm::Triple::wasm64:
+        return llvm::make_unique<toolchains::GenericUnix>(*this, target);
+      default:
+        Diags.diagnose(SourceLoc(), diag::error_unknown_target,
+                       ArgList.getLastArg(options::OPT_target)->getValue());
+    } 
     break;
   }
   return nullptr;
