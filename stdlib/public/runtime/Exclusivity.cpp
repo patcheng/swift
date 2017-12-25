@@ -31,7 +31,8 @@
 // simulators. clang thinks thread_local works there, but it doesn't.
 #if TARGET_OS_SIMULATOR && !TARGET_RT_64_BIT &&                      \
   ((TARGET_OS_IOS && __IPHONE_OS_VERSION_MIN_REQUIRED__ < 100000) || \
-   (TARGET_OS_WATCH && __WATCHOS_OS_VERSION_MIN_REQUIRED__ < 30000))
+   (TARGET_OS_WATCH && __WATCHOS_OS_VERSION_MIN_REQUIRED__ < 30000)) || \
+  defined(__wasm__)
 // 32-bit iOS 9 simulator or 32-bit watchOS 2 simulator - use pthreads
 # define SWIFT_EXCLUSIVITY_USE_THREADLOCAL 0
 # define SWIFT_EXCLUSIVITY_USE_PTHREAD_SPECIFIC 1
@@ -52,7 +53,10 @@
 #endif
 
 // Pick a return-address strategy
-#if __GNUC__
+#if defined(__wasm__) 
+// HACK
+#define get_return_address() ((void*) 0)
+#elif __GNUC__
 #define get_return_address() __builtin_return_address(0)
 #elif _MSC_VER
 #include <intrin.h>
