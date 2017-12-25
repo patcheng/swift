@@ -75,7 +75,7 @@
 /// Attribute used to export symbols from the runtime.
 #if __MACH__
 # define SWIFT_EXPORT_ATTRIBUTE __attribute__((__visibility__("default")))
-#elif __ELF__
+#elif __ELF__ || __wasm__
 
 // Use protected visibility for ELF, since we don't want Swift symbols to be
 // interposable. The relative relocations we form to metadata aren't

@@ -398,7 +398,7 @@ internal var _objectPointerLowSpareBitShift: UInt {
 }
 
 #if arch(i386) || arch(arm) || arch(powerpc64) || arch(powerpc64le) || arch(
-  s390x)
+  s390x) || arch(wasm32)
 @_inlineable // FIXME(sil-serialize-all)
 @_versioned
 internal var _objectPointerIsObjCBit: UInt {

@@ -262,9 +262,9 @@ struct ${Self} {
   @_versioned // FIXME(sil-serialize-all)
   internal mutating func _finalizeAndReturnIntHash() -> Int {
     let hash: UInt64 = finalizeAndReturnHash()
-#if arch(i386) || arch(arm)
+#if arch(i386) || arch(arm) || arch(wasm32)
     return Int(truncatingIfNeeded: hash)
-#elseif arch(x86_64) || arch(arm64) || arch(powerpc64) || arch(powerpc64le) || arch(s390x)
+#elseif arch(x86_64) || arch(arm64) || arch(powerpc64) || arch(powerpc64le) || arch(s390x) || arch(wasm64)
     return Int(Int64(bitPattern: hash))
 #endif
   }
