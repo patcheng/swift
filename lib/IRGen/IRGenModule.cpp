@@ -1041,6 +1041,7 @@ void IRGenModule::emitAutolinkInfo() {
 
   } else {
     assert((TargetInfo.OutputObjectFormat == llvm::Triple::ELF ||
+            TargetInfo.OutputObjectFormat == llvm::Triple::Wasm ||
             Triple.isOSCygMing()) &&
            "expected ELF output format or COFF format for Cygwin/MinGW");
 
@@ -1130,6 +1131,7 @@ bool IRGenModule::finalize() {
       break;
     case llvm::Triple::ELF:
     case llvm::Triple::COFF:
+    case llvm::Triple::Wasm:
       ModuleHash->setSection(".swift_modhash");
       break;
     default:
