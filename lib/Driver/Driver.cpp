@@ -69,7 +69,7 @@ Driver::Driver(StringRef DriverExecutable,
   : Opts(createSwiftOptTable()), Diags(Diags),
     Name(Name), DriverExecutable(DriverExecutable),
     DefaultTargetTriple(llvm::sys::getDefaultTargetTriple()) {
-      
+
   // The driver kind must be parsed prior to parsing arguments, since that
   // affects how arguments are parsed.
   parseDriverKind(Args.slice(1));
@@ -99,7 +99,7 @@ void Driver::parseDriverKind(ArrayRef<const char *> Args) {
   .Case("swift-autolink-extract", DriverKind::AutolinkExtract)
   .Case("swift-format", DriverKind::SwiftFormat)
   .Default(None);
-  
+
   if (Kind.hasValue())
     driverKind = Kind.getValue();
   else if (!OptName.empty())
@@ -227,9 +227,15 @@ Driver::buildToolChain(const llvm::opt::InputArgList &ArgList) {
   case llvm::Triple::Haiku:
     return llvm::make_unique<toolchains::GenericUnix>(*this, target);
   default:
-    Diags.diagnose(SourceLoc(), diag::error_unknown_target,
-                   ArgList.getLastArg(options::OPT_target)->getValue());
-    break;
+      switch(target.getArch()) {
+        case llvm::Triple::wasm32:
+        case llvm::Triple::wasm64:
+          return llvm::make_unique<toolchains::GenericUnix>(driver, target);
+        default:
+          Diags.diagnose(SourceLoc(), diag::error_unknown_target,
+                        ArgList.getLastArg(options::OPT_target)->getValue());
+          break;
+      }
   }
   return nullptr;
 }
@@ -2246,7 +2252,7 @@ Job *Driver::buildJobsForAction(Compilation &C, const JobAction *JA,
 
   // 4. Construct a Job which produces the right CommandOutput.
   std::unique_ptr<Job> ownedJob = TC.constructJob(*JA, C, std::move(InputJobs),
-                                                  InputActions, 
+                                                  InputActions,
                                                   std::move(Output), OI);
   Job *J = C.addJob(std::move(ownedJob));
 
