@@ -228,7 +228,13 @@ makeToolChain(Driver &driver, const llvm::Triple &target) {
     return llvm::make_unique<toolchains::GenericUnix>(driver, target);
     break;
   default:
-    return nullptr;
+      switch(target.getArch()) {
+        case llvm::Triple::wasm32:
+        case llvm::Triple::wasm64:
+          return llvm::make_unique<toolchains::GenericUnix>(driver, target);
+        default:
+          return nullptr;
+      } 
   }
 }
 
