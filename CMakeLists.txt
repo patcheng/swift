@@ -767,6 +767,15 @@ if(swift_build_windows AND NOT "${CMAKE_SYSTEM_NAME}" STREQUAL "Windows")
   configure_sdk_windows(WINDOWS "Windows" "msvc" "aarch64;armv7;i686;x86_64")
 endif()
 
+# Should we cross-compile the standard library for WebAssembly
+is_sdk_requested(WEBASSEMBLY swift_build_webassembly)
+if (swift_build_webassembly)
+  configure_sdk_webassembly(WEBASSEMBLY "WebAssembly" "webassembly" "webassembly" "wasm32" "wasm32-unknown-unknown-wasm" "${SWIFT_SDK_WEBASSEMBLY_PATH}")
+
+  set(SWIFT_PRIMARY_VARIANT_SDK_default "WEBASSEMBLY")
+  set(SWIFT_PRIMARY_VARIANT_ARCH_default "wasm32")
+endif()
+
 if("${SWIFT_SDKS}" STREQUAL "")
   set(SWIFT_SDKS "${SWIFT_CONFIGURED_SDKS}")
 endif()
