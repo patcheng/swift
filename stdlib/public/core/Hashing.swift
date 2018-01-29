@@ -141,9 +141,9 @@ func _mixInt64(_ value: Int64) -> Int64 {
 @_transparent
 public // @testable
 func _mixUInt(_ value: UInt) -> UInt {
-#if arch(i386) || arch(arm)
+#if arch(i386) || arch(arm) || arch(wasm32)
   return UInt(_mixUInt32(UInt32(value)))
-#elseif arch(x86_64) || arch(arm64) || arch(powerpc64) || arch(powerpc64le) || arch(s390x)
+#elseif arch(x86_64) || arch(arm64) || arch(powerpc64) || arch(powerpc64le) || arch(s390x) || arch(wasm64)
   return UInt(_mixUInt64(UInt64(value)))
 #endif
 }
@@ -152,9 +152,9 @@ func _mixUInt(_ value: UInt) -> UInt {
 @_transparent
 public // @testable
 func _mixInt(_ value: Int) -> Int {
-#if arch(i386) || arch(arm)
+#if arch(i386) || arch(arm) || arch(wasm32)
   return Int(_mixInt32(Int32(value)))
-#elseif arch(x86_64) || arch(arm64) || arch(powerpc64) || arch(powerpc64le) || arch(s390x)
+#elseif arch(x86_64) || arch(arm64) || arch(powerpc64) || arch(powerpc64le) || arch(s390x) || arch(wasm64)
   return Int(_mixInt64(Int64(value)))
 #endif
 }
