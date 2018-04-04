@@ -23,9 +23,11 @@ add_swift_library(swiftDriver STATIC
 if(SWIFT_BUILD_STATIC_STDLIB)
   set(static_stdlib_lnk_file_list)
   foreach(sdk ${SWIFT_CONFIGURED_SDKS})
-    if("${SWIFT_SDK_${sdk}_OBJECT_FORMAT}" STREQUAL "ELF")
+    if("${SWIFT_SDK_${sdk}_OBJECT_FORMAT}" STREQUAL "ELF" OR
+       "${SWIFT_SDK_${sdk}_OBJECT_FORMAT}" STREQUAL "WASM")
       string(TOLOWER "${sdk}" lowercase_sdk)
-      if(SWIFT_LINUX_ICU_STATICLIB)
+
+      if(SWIFT_${sdk}_ICU_STATICLIB)
         set(ICU_STATICLIB "TRUE")
       else()
         set(ICU_STATICLIB "FALSE")
